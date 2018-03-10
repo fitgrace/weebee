@@ -1,8 +1,7 @@
 /**
  * Author : FitGrace【fitingrace@gmail.com 】
  * Link   : http://www.fitgrace.com/
- * Since  : 创建日期
- * Version: 2018-03-08
+ * Since  : 2018-03-08
  *
  * Description【作用描述】
  *    引入所有共用函数
@@ -20,3 +19,6 @@ export * from './getSplinter'
 
 // 保存指定信息文件到指定目录
 export * from './saveSplinter'
+
+// 读取指定路径文件
+export * from './readSplinter'

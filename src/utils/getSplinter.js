@@ -1,8 +1,7 @@
 /**
  * Author : FitGrace【fitingrace@gmail.com 】
  * Link   : http://www.fitgrace.com/
- * Since  : 创建日期
- * Version: 2018-03-07
+ * Since  : 2018-03-07
  *
  * Description【作用描述】
  *    根据URL 地址，获取页面信息

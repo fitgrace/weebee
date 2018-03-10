@@ -1,8 +1,7 @@
 /**
  * Author : FitGrace【fitingrace@gmail.com 】
  * Link   : http://www.fitgrace.com/
- * Since  : 创建日期
- * Version: 2018-03-07
+ * Since  : 2018-03-07
  *
  * Description【作用描述】
  *    用于异步写入文件
@@ -19,6 +18,8 @@ const fs = require("fs")
 const saveSplinter = (fileName, fileInfo, callback) => {
   fs.writeFile(fileName, fileInfo, 'utf8', (err) => {
     if (err) console.log(`保存文件${fileName}失败`, err)
+
+    if (typeof callback === 'function') callback()
 
     console.log(`文件${fileName}保存成功！`)
   })
