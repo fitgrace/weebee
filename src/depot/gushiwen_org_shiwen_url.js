@@ -1,0 +1,4 @@
+
+    const urlArr = {"http://so.gushiwen.org/shiwenv_768c2f579b40.aspx":"西江月（琵琶）","http://so.gushiwen.org/shiwenv_5aec3a2e147b.aspx":"戏题友人壁","http://so.gushiwen.org/shiwenv_4b042d6119f5.aspx":"水龙吟（牡丹）","http://so.gushiwen.org/shiwenv_717d0dee309b.aspx":"题法院","http://so.gushiwen.org/shiwenv_c2ddf62c7c9a.aspx":"减字木兰花","http://so.gushiwen.org/shiwenv_5eeda9a7c9e0.aspx":"西江月（正月四日和建宁陈安行舍人，时被召）","http://so.gushiwen.org/shiwenv_a7e321dbf709.aspx":"扬州慢（琼花次韵）","http://so.gushiwen.org/shiwenv_529b54e1c408.aspx":"香菱咏月·其三","http://so.gushiwen.org/shiwenv_6c4110cd9f71.aspx":"寄畅当","http://so.gushiwen.org/shiwenv_043ec772a005.aspx":"松石晓景图"}
+    export default urlArr
+  
