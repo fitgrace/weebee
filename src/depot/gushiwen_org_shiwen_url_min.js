@@ -1,4 +1,4 @@
-export default urlArr = {
+constt urlArr = {
     "http://so.gushiwen.org/shiwenv_ee16df5673bc.aspx":"唐代_李白_将进酒",
     "http://so.gushiwen.org/shiwenv_632c5beb84eb.aspx":"宋代_苏轼_水调歌头·明月几时有",
     "http://so.gushiwen.org/shiwenv_73add8822103.aspx":"魏晋_陶渊明_桃花源记",
@@ -6211,7 +6211,7 @@ export default urlArr = {
     "http://so.gushiwen.org/shiwenv_b8c19faabf2d.aspx":"唐代_郑巢_送?",
     "http://so.gushiwen.org/shiwenv_0ed6f495c7cc.aspx":"宋代_曾丰_送广东潘帅移镇湖南十口号",
     "http://so.gushiwen.org/shiwenv_fe5dc6850405.aspx":"宋代_陈越_送张无梦归天台",
-    "http://so.gushiwen.org/shiwenv_a5cf17ac9ee2.aspx":"宋代_范成大_晓发飞乌，晨霞满天，少顷大雨。吴谚云"朝",
+    "http://so.gushiwen.org/shiwenv_a5cf17ac9ee2.aspx":'宋代_范成大_晓发飞乌，晨霞满天，少顷大雨。吴谚云"朝"',
     "http://so.gushiwen.org/shiwenv_300899409f9a.aspx":"唐代_皮日休_嘲归仁绍龟诗",
     "http://so.gushiwen.org/shiwenv_818e4d1702af.aspx":"宋代_曹勋_和陈南仲郎中见贻",
     "http://so.gushiwen.org/shiwenv_06c0b98a693b.aspx":"唐代_王维_送宇文三赴河西充行军司马",
@@ -9264,7 +9264,7 @@ export default urlArr = {
     "http://so.gushiwen.org/shiwenv_57678f7aae39.aspx":"唐代_韩愈_饮城南道边古墓上逢中丞过赠礼部卫员外少室张道士",
     "http://so.gushiwen.org/shiwenv_d784cb1cea84.aspx":"唐代_孙子多_嘲郑傪妓",
     "http://so.gushiwen.org/shiwenv_11c2fa2de8ba.aspx":"宋代_舒邦佐_闻蝉",
-    "http://so.gushiwen.org/shiwenv_f089b9514459.aspx":"明代_刘基_梁甫吟（此诗云"艳妻"、"牝鸡"，亦为奇后而",
+    "http://so.gushiwen.org/shiwenv_f089b9514459.aspx":'明代_刘基_梁甫吟（此诗云"艳妻"、"牝鸡"，亦为奇后而',
     "http://so.gushiwen.org/shiwenv_17669ae56ad1.aspx":"宋代_方回_七十翁吟七言十绝",
     "http://so.gushiwen.org/shiwenv_2b076821ef6c.aspx":"宋代_释印肃_颂证道歌·证道歌",
     "http://so.gushiwen.org/shiwenv_81780b1ebdb1.aspx":"唐代_郑谷_江上阻风",
@@ -9818,3 +9818,4 @@ export default urlArr = {
     "http://so.gushiwen.org/shiwenv_6c4110cd9f71.aspx":"唐代_李端_寄畅当",
     "http://so.gushiwen.org/shiwenv_043ec772a005.aspx":"唐代_陆龟蒙_松石晓景图"
 }
+export default urlArr

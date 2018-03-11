@@ -21,7 +21,7 @@
  */
 
 const cheerio = require('cheerio')
-import urlArr from './depot/gushiwen_org_shiwen_url'
+import urlArr from './depot/gushiwen_org_shiwen_url_min'
 import detailArr from './depot/gushiwen_org_shiwen_detail'
 import { getSplinter, saveSplinter } from './utils/index'
 
@@ -61,17 +61,18 @@ const getDetail = () => {
   const detArr = Object.keys(detailArr)
   console.log('要抓取的数据共计：', listArr.length)
 
-  for (let curUrl of listArr) {
-    const fileName = curUrl.replace('http://', '').replace('.aspx', '').replace(/\//g, '%').replace('.', '@').replace('.', '@')
+//for (let curUrl of listArr) {
+//  const fileName = curUrl.replace('http://', '').replace('.aspx', '').replace(/\//g, '%').replace('.', '@').replace('.', '@')
 
-    if (detArr.includes(fileName)) {
-      console.log(`${curUrl} 已经存在，无需再次抓取！！！`)
-    } else {
-    //getSplinter(curUrl, function(resData) {
-    //  analyze(curUrl, fileName, listArr.length, resData)
-    //})
-    }
-  }
+//  if (detArr.includes(fileName)) {
+//    len++
+//    console.log(`${curUrl} 已经存在，无需再次抓取！！！`)
+//  } else {
+//    getSplinter(curUrl, function(resData) {
+//      analyze(curUrl, fileName, listArr.length, resData)
+//    })
+//  }
+//}
 
 }
 
