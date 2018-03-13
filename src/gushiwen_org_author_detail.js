@@ -4,7 +4,7 @@
  * Since  : 2018-03-10
  *
  * Description【作用描述】
- *    获取古诗文网诗文单篇详情
+ *    获取古诗文网诗作者篇详情
  *
  * Requires【依赖模块】
  * Param【 参数】
@@ -21,8 +21,8 @@
  */
 
 const cheerio = require('cheerio')
-import urlArr from './depot/gushiwen_org_mingju_list_4'
-import detailArr from './depot/gushiwen_org_mingju_detail'
+import urlArr from './depot/gushiwen_org_author_list'
+import detailArr from './depot/gushiwen_org_author_detail'
 import { getSplinter, saveSplinter } from './utils/index'
 
 let len = 0
@@ -33,7 +33,7 @@ const analyze = (curUrl, fileName, sum, infoData) => {
   const infoEl = $('.main3 .left')
   $(infoEl).find('.adsbygoogle').parent().remove()
 
-  const filePath = `depot/gushiwen_org_mingju/${fileName}.html`
+  const filePath = `depot/gushiwen_org_author/${fileName}.html`
   const fileInfo = $(infoEl).html()
 
   saveSplinter(filePath, fileInfo, () => {
@@ -42,7 +42,7 @@ const analyze = (curUrl, fileName, sum, infoData) => {
 
     console.log(len, sum)
     if (len === sum ) {
-      const fileName = './src/depot/gushiwen_org_mingju_detail.js'
+      const fileName = './src/depot/gushiwen_org_author_detail.js'
       const fileInfo = `
         const detailArr = ${JSON.stringify(detailArr)}
         export default detailArr
@@ -64,7 +64,7 @@ const getDetail = () => {
   for (let curUrl of listArr) {
     const urlVal = `http://so.gushiwen.org/${curUrl}`
     console.log('curUrl：', urlVal)
-    const fileName = curUrl.replace('mingju/', '').replace('.aspx', '')
+    const fileName = curUrl.replace('.aspx', '')
     console.log('fileName：', fileName)
 
     if (detArr.includes(fileName)) {
