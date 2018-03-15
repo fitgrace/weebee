@@ -21,7 +21,7 @@
  */
 
 const cheerio = require('cheerio')
-import urlArr from './depot/gushiwen_org_shiwen_list'
+import urlArr from './depot/gushiwen_org_shiwen_list_3'
 import detailArr from './depot/gushiwen_org_shiwen_detail'
 import { getSplinter, saveSplinter } from './utils/index'
 
