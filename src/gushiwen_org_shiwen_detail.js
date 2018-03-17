@@ -40,7 +40,7 @@ const opSave = (sum, moreLen, moreSum, fileName, ele) => {
   $('img[src="/img/speaker.png"]').parent().remove()
 
 
-	const filePath = `depot/gushiwen_org/${fileName}.html`
+	const filePath = `depot/gushiwen_org_shiwen/${fileName}.html`
 	const fileInfo = $.html()
 
   if (moreLen === moreSum) {
@@ -51,14 +51,13 @@ const opSave = (sum, moreLen, moreSum, fileName, ele) => {
       console.log(len, sum)
 
       // 保存抓取完成的信息目录
-      // if (len === sum ) {
-        // const fileName = './src/depot/gushiwen_org_shiwen_detail.js'
-        // const fileInfo = `
-          // const detailArr = ${JSON.stringify(detailArr)}
-          // export default detailArr
-        // `
-        // saveSplinter(fileName, fileInfo)
-      // }
+      if (len === sum ) {
+        const fileName = './src/depot/gushiwen_org_shiwen_detail.js'
+        const fileInfo = `const detailArr = ${JSON.stringify(detailArr)}
+        export default detailArr`
+
+        saveSplinter(fileName, fileInfo)
+      }
     })
   }
 }
@@ -103,7 +102,7 @@ const analyze = (fileName, sum, infoData) => {
     const fyLen = $(elem).find('a[href*="javascript:fanyiShow"]').length
     if (fyLen > 0) {
       const fyNum = $(elem).find('a[href*="javascript:fanyiShow"]').attr('href').replace('javascript:fanyiShow(','').replace(')', '')
-      console.log('fanyi：', fyNum)
+      // console.log('fanyi：', fyNum)
       getSplinter(`http://so.gushiwen.org/shiwen2017/ajaxfanyi.aspx?id=${fyNum}`, function(resData) {
         // $(elem).html('')
         const resEl = cheerio.load(resData, {decodeEntities: false})
@@ -120,7 +119,7 @@ const analyze = (fileName, sum, infoData) => {
     if (sxLen > 0) {
       const sxNum = $(elem).find('a[href*="javascript:shangxiShow"]').attr('href').replace('javascript:shangxiShow(','').replace(')', '')
       $(elem).html('')
-      console.log('shangxi：', sxNum)
+      // console.log('shangxi：', sxNum)
       getSplinter(`http://so.gushiwen.org/shiwen2017/ajaxshangxi.aspx?id=${sxNum}`, function(resData) {
         // $(elem).html('')
         const resEl = cheerio.load(resData, {decodeEntities: false})
