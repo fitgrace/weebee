@@ -22,10 +22,14 @@
 
 const cheerio = require('cheerio')
 import urlArr from './depot/gushiwen_org_shiwen_list_0'
+import attrArr from './depot/gushiwen_org_shiwen_attr'
 import detailArr from './depot/gushiwen_org_shiwen_detail'
 import { getSplinter, saveSplinter } from './utils/index'
 
 let len = 0
+
+attrArr.fyi = []
+attrArr.sxi = []
 
 // 保存文件
 const opSave = (sum, moreLen, moreSum, fileName, ele) => {
@@ -34,10 +38,10 @@ const opSave = (sum, moreLen, moreSum, fileName, ele) => {
   const $ = cheerio.load(ele, {decodeEntities: false})
 
   // 删除 有用，没用
-  $('.sons').find('a[href*="javascript:ding"]').parent().remove()
+  // $('.sons').find('a[href*="javascript:ding"]').parent().remove()
 
   // 删除朗读的小喇叭
-  $('img[src="/img/speaker.png"]').parent().remove()
+  // $('img[src="/img/speaker.png"]').parent().remove()
 
 
 	const filePath = `depot/gushiwen_org_shiwen/${fileName}.html`
@@ -92,8 +96,23 @@ const analyze = (fileName, sum, infoData) => {
   $(infoEl).find('.sons[style="display:none;"]').remove()
 
 
-  // 遍历所有的信息块
-  let moreLen = 0
+  // 遍历所有要翻译的信息块
+  $(infoEl).find('a[href*="javascript:fanyiShow"]').each((i, elem) => {
+    const curEl = $(elem)
+    const fyNum = $(elem).attr('href').replace('javascript:fanyiShow(','').replace(')', '')
+    console.log('fan yi num：', fyNum)
+  })
+
+
+  // 遍历所有要获得更多赏析的信息块
+  $(infoEl).find('a[href*="javascript:shangxiShow"]').each((i, elem) => {
+    const curEl = $(elem)
+    const sxNum = $(elem).attr('href').replace('javascript:shangxiShow(','').replace(')', '')
+    console.log('shang xi num：', sxNum)
+  })
+  // opSave(sum, moreLen, moreNum, fileName, $(infoEl).html())
+
+
   const moreNum = $(infoEl).find('a[href*="javascript:fanyiShow"]').length + $(infoEl).find('a[href*="javascript:shangxiShow"]').length
   $(infoEl).find('.sons').each((i, elem) => {
     const curEl = $(elem)

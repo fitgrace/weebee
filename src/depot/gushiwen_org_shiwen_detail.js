@@ -1,2 +1,2 @@
 const detailArr = {}
-export default detailArr
+        export default detailArr
