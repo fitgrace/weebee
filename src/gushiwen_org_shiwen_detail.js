@@ -32,9 +32,7 @@ attrArr.fyi = []
 attrArr.sxi = []
 
 // 保存文件
-const opSave = (sum, moreLen, moreSum, fileName, ele) => {
-  console.log('moreLen：', moreLen, 'moreNum：', moreSum)
-
+const opSave = (sum, fileName, ele) => {
   const $ = cheerio.load(ele, {decodeEntities: false})
 
   // 删除 有用，没用
@@ -47,23 +45,24 @@ const opSave = (sum, moreLen, moreSum, fileName, ele) => {
 	const filePath = `depot/gushiwen_org_shiwen/${fileName}.html`
 	const fileInfo = $.html()
 
-  if (moreLen === moreSum) {
-    saveSplinter(filePath, fileInfo, () => {
-      len++
-      detailArr[fileName] = filePath
+  saveSplinter(filePath, fileInfo, () => {
+    len++
+    detailArr[fileName] = filePath
 
-      console.log(len, sum)
+    // 保存抓取完成的信息目录
+    if (len === sum ) {
+      const paramName = './src/depot/gushiwen_org_shiwen_detail.js'
+      const paramInfo = `const detailArr = ${JSON.stringify(detailArr)}
+      export default detailArr`
+      saveSplinter(paramName, paramInfo)
 
-      // 保存抓取完成的信息目录
-      if (len === sum ) {
-        const fileName = './src/depot/gushiwen_org_shiwen_detail.js'
-        const fileInfo = `const detailArr = ${JSON.stringify(detailArr)}
-        export default detailArr`
-
-        saveSplinter(fileName, fileInfo)
-      }
-    })
-  }
+      // 保存翻译，赏析Num
+      const attrName = './src/depot/gushiwen_org_shiwen_attr.js'
+      const attrInfo = `const attrArr = ${JSON.stringify(attrArr)}
+      export default attrArr`
+      saveSplinter(attrName, attrInfo)
+    }
+  })
 }
 
 // 解析抓取到的页面信息
@@ -100,7 +99,9 @@ const analyze = (fileName, sum, infoData) => {
   $(infoEl).find('a[href*="javascript:fanyiShow"]').each((i, elem) => {
     const curEl = $(elem)
     const fyNum = $(elem).attr('href').replace('javascript:fanyiShow(','').replace(')', '')
+
     console.log('fan yi num：', fyNum)
+    if (!attrArr.fyi.includes(fyNum)) attrArr.fyi.push(fyNum)
   })
 
 
@@ -108,48 +109,11 @@ const analyze = (fileName, sum, infoData) => {
   $(infoEl).find('a[href*="javascript:shangxiShow"]').each((i, elem) => {
     const curEl = $(elem)
     const sxNum = $(elem).attr('href').replace('javascript:shangxiShow(','').replace(')', '')
+
     console.log('shang xi num：', sxNum)
+    if (!attrArr.sxi.includes(sxNum)) attrArr.sxi.push(sxNum)
   })
-  // opSave(sum, moreLen, moreNum, fileName, $(infoEl).html())
-
-
-  const moreNum = $(infoEl).find('a[href*="javascript:fanyiShow"]').length + $(infoEl).find('a[href*="javascript:shangxiShow"]').length
-  $(infoEl).find('.sons').each((i, elem) => {
-    const curEl = $(elem)
-
-    // 是否有更多翻译
-    const fyLen = $(elem).find('a[href*="javascript:fanyiShow"]').length
-    if (fyLen > 0) {
-      const fyNum = $(elem).find('a[href*="javascript:fanyiShow"]').attr('href').replace('javascript:fanyiShow(','').replace(')', '')
-      // console.log('fanyi：', fyNum)
-      getSplinter(`http://so.gushiwen.org/shiwen2017/ajaxfanyi.aspx?id=${fyNum}`, function(resData) {
-        // $(elem).html('')
-        const resEl = cheerio.load(resData, {decodeEntities: false})
-        $(elem).html('').append(resEl.html())
-
-        moreLen++
-
-        opSave(sum, moreLen, moreNum, fileName, $(infoEl).html())
-      })
-    }
-
-    // 是否有更多赏析
-    const sxLen = $(elem).find('a[href*="javascript:shangxiShow"]').length
-    if (sxLen > 0) {
-      const sxNum = $(elem).find('a[href*="javascript:shangxiShow"]').attr('href').replace('javascript:shangxiShow(','').replace(')', '')
-      $(elem).html('')
-      // console.log('shangxi：', sxNum)
-      getSplinter(`http://so.gushiwen.org/shiwen2017/ajaxshangxi.aspx?id=${sxNum}`, function(resData) {
-        // $(elem).html('')
-        const resEl = cheerio.load(resData, {decodeEntities: false})
-        $(elem).html('').append(resEl.html())
-
-        moreLen++
-
-        opSave(sum, moreLen, moreNum, fileName, $(infoEl).html())
-      })
-    }
-  })
+  opSave(sum, fileName, $(infoEl).html())
 
   // console.log(fileInfo)
 }
@@ -169,7 +133,7 @@ const getDetail = () => {
       len++
       console.log(`${urlVal} 已经存在，无需再次抓取！！！`)
     } else {
-      console.log('get page info', urlVal)
+      console.log('get page info', listArr.length, len, urlVal)
 
       getSplinter(urlVal, function(resData) {
         analyze(fileName, listArr.length, resData)
