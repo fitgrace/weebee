@@ -21,16 +21,13 @@
  */
 
 const cheerio = require('cheerio')
-import mjListArr from './depot/gushiwen_org_mingju_list'
+import urlArr from './depot/gushiwen_org_mingju_list'
 import { getSplinter, saveSplinter } from './utils/index'
 
 
 // 判断是否还有下一页
-const hasNext = (len, infoEl) => {
-  const $ = cheerio.load(infoEl)
-  const isNext = $('.pages').find('a').length
-
-  if (isNext > 0) {
+const hasNext = (len, sonsLen) => {
+  if (sonsLen > 0) {
     len++
     getInfo(len)
   } else {
@@ -38,8 +35,8 @@ const hasNext = (len, infoEl) => {
 
     const fileName = './src/depot/gushiwen_org_mingju_list.js'
     const fileInfo = `
-      const mjListArr = ${JSON.stringify(mjListArr)}
-      export default mjListArr
+      const urlArr = ${JSON.stringify(urlArr)}
+      export default urlArr
     `
     saveSplinter(fileName, fileInfo)
   }
@@ -47,22 +44,23 @@ const hasNext = (len, infoEl) => {
 
 
 // 解析抓取到的页面信息
-const analyze = (infoEl) => {
+const analyze = (len, infoEl) => {
   const $ = cheerio.load(infoEl)
-  const sons = $('.sons').find('.cont')
+  const sons = $('.main3').find('.left').find('.sons').find('.cont')
+  const sonsLen = $('.main3').find('.left').find('.sons').find('.cont').length
 
   sons.each((i, elem) => {
-    const urlVal = $(elem).find('a').eq(0).attr('href').replace('/','')
-    const curMju = $(elem).find('a').eq(0).text()
+    const curUrl = $(elem).find('a').eq(0).attr('href').replace('/mingju/', '').replace('.aspx', '')
+    const curTitle = $(elem).find('a').eq(0).text()
+    const authorSource = $(elem).find('a').eq(1).text().replace('》', '').split('《');
 
-    const curSwenUrl = $(elem).find('a').eq(1).attr('href')
-    const curSwenHd = $(elem).find('a').eq(1).text().replace('《','_').replace('》','')
-
-    mjListArr[urlVal] = {}
-    mjListArr[urlVal].mingju = curMju
-    mjListArr[urlVal].swenUrl = curSwenUrl
-    mjListArr[urlVal].swenHd = curSwenHd
+    urlArr[curUrl] = {}
+    urlArr[curUrl].info = curTitle
+    urlArr[curUrl].author = authorSource[0]
+    urlArr[curUrl].source = authorSource[1]
   })
+
+  hasNext(len, sonsLen)
 }
 
 
@@ -70,20 +68,11 @@ const analyze = (infoEl) => {
 const getInfo = (pageNum) => {
   let len = pageNum
   let initUrl = `http://so.gushiwen.org/mingju/Default.aspx?p=${len}&c=&t=`
-  console.log('get mingju list：', initUrl)
+  console.log('get page info', len, initUrl)
 
-  const arr = Object.keys(mjListArr)
-  if (arr.includes(initUrl)) {
-    console.log(`${curUrl} 已经存在，无需再次抓取！！！`)
-  } else {
-    getSplinter(initUrl, function(resData) {
-      const $ = cheerio.load(resData)
-      const infoEl = $('.main3 .left')
-
-      analyze(infoEl.html())
-      hasNext(len, infoEl.html())
-    })
-  }
+  getSplinter(initUrl, function(resData) {
+    analyze(len, resData)
+  })
 }
 
 getInfo(1)

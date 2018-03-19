@@ -46,17 +46,17 @@ const getDetail = () => {
   // const listArr = attrArr.sxi
   console.log('要抓取的数据共计：', listArr.length)
 
-  for (let curUrl of listArr) {
-    const urlVal = `http://so.gushiwen.org/shiwen2017/ajaxfanyi.aspx?id=${curUrl}`
-    // const urlVal = `http://so.gushiwen.org/shiwen2017/ajaxshangxi.aspx?id=${curUrl}`
-    const fileName = curUrl
+//for (let curUrl of listArr) {
+//  const urlVal = `http://so.gushiwen.org/shiwen2017/ajaxfanyi.aspx?id=${curUrl}`
+//  // const urlVal = `http://so.gushiwen.org/shiwen2017/ajaxshangxi.aspx?id=${curUrl}`
+//  const fileName = curUrl
 
-    console.log('get page info', listArr.length, len, urlVal)
+//  console.log('get page info', listArr.length, len, urlVal)
 
-    getSplinter(urlVal, function(resData) {
-      analyze(fileName, resData)
-    })
-  }
+//  getSplinter(urlVal, function(resData) {
+//    analyze(fileName, resData)
+//  })
+//}
 
 }
 

@@ -4,7 +4,7 @@
  * Since  : 2018-03-10
  *
  * Description【作用描述】
- *    获取古诗文网诗文单篇详情
+ *    获取古诗文网名句单篇详情
  *
  * Requires【依赖模块】
  * Param【 参数】
@@ -21,37 +21,101 @@
  */
 
 const cheerio = require('cheerio')
-import urlArr from './depot/gushiwen_org_mingju_list_4'
+import urlArr from './depot/gushiwen_org_mingju_list'
+import attrArr from './depot/gushiwen_org_mingju_attr'
 import detailArr from './depot/gushiwen_org_mingju_detail'
 import { getSplinter, saveSplinter } from './utils/index'
 
 let len = 0
 
-// 解析抓取到的页面信息
-const analyze = (curUrl, fileName, sum, infoData) => {
-  const $ = cheerio.load(infoData)
-  const infoEl = $('.main3 .left')
-  $(infoEl).find('.adsbygoogle').parent().remove()
+attrArr.fyi = []
+attrArr.sxi = []
 
-  const filePath = `depot/gushiwen_org_mingju/${fileName}.html`
-  const fileInfo = $(infoEl).html()
+// 保存文件
+const opSave = (sum, fileName, ele) => {
+  const $ = cheerio.load(ele, {decodeEntities: false})
+
+  // 删除 有用，没用
+  // $('.sons').find('a[href*="javascript:ding"]').parent().remove()
+
+  // 删除朗读的小喇叭
+  // $('img[src="/img/speaker.png"]').parent().remove()
+
+
+	const filePath = `depot/gushiwen_org_mingju/${fileName}.html`
+	const fileInfo = $.html()
 
   saveSplinter(filePath, fileInfo, () => {
     len++
     detailArr[fileName] = filePath
+    console.log(`共计${sum}当前完成${len}：${filePath}`)
 
-    console.log(len, sum)
+    // 保存抓取完成的信息目录
     if (len === sum ) {
-      const fileName = './src/depot/gushiwen_org_mingju_detail.js'
-      const fileInfo = `
-        const detailArr = ${JSON.stringify(detailArr)}
-        export default detailArr
-      `
-      // 保存抓取完成的信息目录
-      saveSplinter(fileName, fileInfo)
-    }
+      const paramName = './src/depot/gushiwen_org_mingju_detail.js'
+      const paramInfo = `const detailArr = ${JSON.stringify(detailArr)}
+      export default detailArr`
+      saveSplinter(paramName, paramInfo)
 
+      // 保存翻译，赏析Num
+      const attrName = './src/depot/gushiwen_org_mingju_attr.js'
+      const attrInfo = `const attrArr = ${JSON.stringify(attrArr)}
+      export default attrArr`
+      saveSplinter(attrName, attrInfo, () => {
+        console.log('翻译，赏析字典保存完成。')
+      })
+    }
   })
+}
+
+// 解析抓取到的页面信息
+const analyze = (fileName, sum, infoData) => {
+  const $ = cheerio.load(infoData, {decodeEntities: false})
+  const infoEl = $('.main3 .left')
+
+  // 删除底部广告
+  // $(infoEl).find('.adsbygoogle').parent().remove()
+
+  // 删除顶部隐藏全文
+  // $(infoEl).find('textarea').eq(0).parent().remove()
+
+  // 删除作者下面的所有项
+  $(infoEl).find('.sonspic').nextAll().remove()
+
+  // 删除作者项
+  // $(infoEl).find('.sonspic').remove()
+  // $(infoEl).find('textarea[id*="txtareAuthor"]').parent().remove()
+
+  // 删队正文右上角译注赏
+  // $(infoEl).find('.sons').eq(0).find('.yizhu').remove()
+
+  // 删队正文底部操作
+  // $(infoEl).find('.sons').eq(0).find('.tool').remove()
+  // $(infoEl).find('.sons').eq(0).find('.toolerweima').remove()
+  // $(infoEl).find('.sons').eq(0).find('div[id*="toolPlay"]').remove()
+
+  // 删除隐藏元素
+  $(infoEl).find('.sons[style="display:none;"]').remove()
+
+  // 遍历所有要翻译的信息块
+  $(infoEl).find('a[href*="javascript:fanyiShow"]').each((i, elem) => {
+    const curEl = $(elem)
+    const fyNum = $(elem).attr('href').replace('javascript:fanyiShow(','').replace(')', '')
+
+    // console.log('fan yi num：', fyNum)
+    if (fyNum) attrArr.fyi.push(fyNum)
+  })
+
+  // 遍历所有要获得更多赏析的信息块
+  $(infoEl).find('a[href*="javascript:shangxiShow"]').each((i, elem) => {
+    const curEl = $(elem)
+    const sxNum = $(elem).attr('href').replace('javascript:shangxiShow(','').replace(')', '')
+
+    // console.log('shang xi num：', sxNum)
+    if (sxNum) attrArr.sxi.push(sxNum)
+  })
+
+  opSave(sum, fileName, $(infoEl).html())
 }
 
 
@@ -61,21 +125,21 @@ const getDetail = () => {
   const detArr = Object.keys(detailArr)
   console.log('要抓取的数据共计：', listArr.length)
 
-  for (let curUrl of listArr) {
-    const urlVal = `http://so.gushiwen.org/${curUrl}`
-    console.log('curUrl：', urlVal)
-    const fileName = curUrl.replace('mingju/', '').replace('.aspx', '')
-    console.log('fileName：', fileName)
+//for (let curUrl of listArr) {
+//  const urlVal = `http://so.gushiwen.org/${curUrl}.aspx`
+//  const fileName = curUrl
 
-    if (detArr.includes(fileName)) {
-      len++
-      console.log(`${curUrl} 已经存在，无需再次抓取！！！`)
-    } else {
-      getSplinter(urlVal, function(resData) {
-        analyze(curUrl, fileName, listArr.length, resData)
-      })
-    }
-  }
+//  if (detArr.includes(fileName)) {
+//    len++
+//    console.log(`${urlVal} 已经存在，无需再次抓取！！！`)
+//  } else {
+//    console.log('get page info：', urlVal)
+
+//    getSplinter(urlVal, function(resData) {
+//      analyze(fileName, listArr.length, resData)
+//    })
+//  }
+//}
 
 }
 

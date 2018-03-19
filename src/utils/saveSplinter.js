@@ -19,9 +19,8 @@ const saveSplinter = (fileName, fileInfo, callback) => {
   fs.writeFile(fileName, fileInfo, 'utf8', (err) => {
     if (err) console.log(`保存文件${fileName}失败`, err)
 
+    // console.log(`文件${fileName}保存成功！`)
     if (typeof callback === 'function') callback()
-
-    console.log(`文件${fileName}保存成功！`)
   })
 }
 
