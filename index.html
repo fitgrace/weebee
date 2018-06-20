@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <title>绽放的过往</title>
+    <style>
+      body {
+        background-color: #1D1D1F;
+      }
+
+      .wrap {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        width: 80%;
+        max-width: 650px;
+        transform: translate(-50%,0)
+      }
+
+      .bewrite {
+        margin-bottom: 6px;
+        font-size: 18px;
+        color: rgba(208,208,208,.96);
+      }
+
+      .progress-bar {
+        height: 24px;
+        border-radius: 12px;
+        border: 1px solid rgba(208,208,208,.02);
+        background-color: rgba(208,208,208,.9);
+        box-shadow: 0px 0px 0px 1px rgba(160,160,161,.02);
+        overflow: hidden;
+      }
+
+      .lapsed {
+        height: 24px;
+        background-color: rgba(34,166,94,1);
+      }
+
+      .rhesis {
+        margin-top: 13px;
+        font-size: 14px;
+        text-align: right;
+        color: rgba(160,160,161,.6);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="bewrite"><span class="year-box"></span> is <span class="ratio"></span> complete.</div>
+      <div class="progress-bar">
+        <div class="lapsed"></div>
+      </div>
+      <div class="rhesis">被生活蹂躏和主动去强女干生活是一个事，就是干，爱谁谁。</div>
+    </div>
+
+    <script>
+
+      const curTimeStamp = + new Date(); // 当前时间戳
+      const curDate = new Date(curTimeStamp); // 当前日期
+      const curYear = curDate.getFullYear(); // 当前年
+
+      const startTime = + new Date(`${curYear}/1/1 00:00:00`); // 本年1月1号时间戳
+      const endTime = + new Date(`${curYear}/12/31 23:59:59`); // 本年12月31号时间戳
+
+      const fullDiff = endTime - startTime; // 全年时间戳差额
+      const curDiff = curTimeStamp - startTime; // 当前时间戳差额
+
+      const ratioNum = curDiff / fullDiff * 100
+      console.log(`2018 is ${ratioNum}% complete.`);
+
+      const el = document.querySelector('.lapsed');
+      el.style = `width:${ratioNum}%`;
+
+      document.querySelector('.year-box').innerHTML = curYear;
+      document.querySelector('.ratio').innerHTML = `${~~ratioNum}%`;
+
+    </script>
+  </body>
+</html>
