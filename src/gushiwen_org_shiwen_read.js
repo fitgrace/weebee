@@ -42,8 +42,7 @@ const analyze = (readData) => {
 //const curAuthor = $(elem).find('.cont').find('.source').find('a').eq(1).text()
 }
 
-const arr = Object.keys(detailArr)
-console.log(arr.length)
+console.log(detailArr.length)
 
 /*
 for (let curUrl of arr) {

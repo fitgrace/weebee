@@ -4,7 +4,7 @@
  * Since  : 2018-03-08
  *
  * Description【作用描述】
- *    获取古诗文网名句列表
+ *    获取古诗文网作者列表
  *
  * Requires【依赖模块】
  * Param【 参数】
@@ -21,16 +21,13 @@
  */
 
 const cheerio = require('cheerio')
-import zzListArr from './depot/gushiwen_org_author_list'
+import urlArr from './depot/gushiwen_org_author_list'
 import { getSplinter, saveSplinter } from './utils/index'
 
 
 // 判断是否还有下一页
-const hasNext = (len, infoEl) => {
-  const $ = cheerio.load(infoEl)
-  const isNext = $('.sonspic').length
-
-  if (isNext > 0) {
+const hasNext = (len, sonsLen) => {
+  if (sonsLen > 5 || len === 1) {
     len++
     getInfo(len)
   } else {
@@ -38,8 +35,8 @@ const hasNext = (len, infoEl) => {
 
     const fileName = './src/depot/gushiwen_org_author_list.js'
     const fileInfo = `
-      const zzListArr = ${JSON.stringify(zzListArr)}
-      export default zzListArr
+      const urlArr = ${JSON.stringify(urlArr)}
+      export default urlArr
     `
     saveSplinter(fileName, fileInfo)
   }
@@ -47,16 +44,23 @@ const hasNext = (len, infoEl) => {
 
 
 // 解析抓取到的页面信息
-const analyze = (infoEl) => {
+const analyze = (len, infoEl) => {
   const $ = cheerio.load(infoEl)
-  const sons = $('.sonspic')
+  const sons = $('.main3').find('.left').find('.sonspic')
 
   sons.each((i, elem) => {
-    const urlVal = $(elem).find('p').eq(0).find('a').eq(0).attr('href').replace('/','')
-    const curZZ = $(elem).find('p').eq(0).find('a').eq(0).text()
+    const curUrl = $(elem).find('.cont').find('a').eq(0).attr('href').replace('/', '').replace('.aspx', '')
+    const curName = $(elem).find('.cont').find('a').eq(0).text()
+    const curPhoto = $(elem).find('.divimg').find('img').attr('src')
 
-    zzListArr[urlVal] = curZZ
+    urlArr[curUrl] = {}
+    urlArr[curUrl].name = curName
+    urlArr[curUrl].photo = curPhoto
   })
+
+  const nextLen = $('.main3').find('.left').find('.pages').find('a').length
+
+  hasNext(len, nextLen)
 }
 
 
@@ -64,20 +68,11 @@ const analyze = (infoEl) => {
 const getInfo = (pageNum) => {
   let len = pageNum
   let initUrl = `http://so.gushiwen.org/authors/Default.aspx?p=${len}&c=`
-  console.log('get mingju list：', initUrl)
+  console.log('get page info', len, initUrl)
 
-  const arr = Object.keys(zzListArr)
-  if (arr.includes(initUrl)) {
-    console.log(`${curUrl} 已经存在，无需再次抓取！！！`)
-  } else {
-    getSplinter(initUrl, function(resData) {
-      const $ = cheerio.load(resData)
-      const infoEl = $('.main3 .left')
-
-      analyze(infoEl.html())
-      hasNext(len, infoEl.html())
-    })
-  }
+  getSplinter(initUrl, function(resData) {
+    analyze(len, resData)
+  })
 }
 
 getInfo(1)

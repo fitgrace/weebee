@@ -18,6 +18,7 @@
  */
 
 const http = require('http')
+//const https = require('https')
 
 const getSplinter = (splinterURL, callback) => {
   http.get(splinterURL, (res) => {
@@ -32,7 +33,8 @@ const getSplinter = (splinterURL, callback) => {
 
     res.on('end', () => {
       let html = Buffer.concat(chunks, size)
-      callback(html)
+      return html
+      // callback(html)
     })
 
   }).on('error', (err) => {

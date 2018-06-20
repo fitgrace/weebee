@@ -15,6 +15,7 @@
 
 
 // 获取指定网址页面信息
+export * from './fetchChunk'
 export * from './getSplinter'
 
 // 保存指定信息文件到指定目录
